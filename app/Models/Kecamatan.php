@@ -13,10 +13,4 @@ class Kecamatan extends Model
         'id',
         'nama_kecamatan',
     ];
-    public function kecamatanPenduduk() {
-        return $this->hasMany(Penduduk::class, 'tahun_id', 'id');
-    }
-    public function kecamatanPenyakit() {
-        return $this->hasMany(KasusPenyakit::class, 'penyakit_id', 'id');
-    }
 }

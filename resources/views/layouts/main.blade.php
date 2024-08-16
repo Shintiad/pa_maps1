@@ -81,7 +81,7 @@
                 </li>
 
                 <!-- Navbar Search -->
-                <li class="nav-item me-3">
+                <!-- <li class="nav-item me-3">
                     <a class="nav-link" data-widget="navbar-search" href="#" role="button">
                         <i class="fas fa-search"></i>
                     </a>
@@ -100,7 +100,7 @@
                             </div>
                         </form>
                     </div>
-                </li>
+                </li> -->
 
                 <li class="nav-item me-3">
                     <a class="nav-link" data-widget="fullscreen" href="#" role="button">
@@ -121,7 +121,7 @@
             <!-- Brand Logo -->
             <a href="/dasboard" class="brand-link">
                 <img src="{{ asset('lte/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-semibold">L - Maps</span>
+                <span class="brand-text font-semibold hover:text-teal-500">L - Maps</span>
             </a>
 
             <!-- Sidebar -->
@@ -237,13 +237,22 @@
             <!-- /.content -->
         </div>
         <!-- /.content-wrapper -->
-        <footer class="main-footer">
-            <strong>Copyright &copy; 2024 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
-            All rights reserved.
-            <div class="float-right d-none d-sm-inline-block">
-                <b>Version</b> 3.2.0
+        <footer class="bg-light text-grey-300 py-3 border-t border-t-grey-300">
+            <div class="container mx-auto flex justify-center items-center">
+                <div class="flex text-sm text-center items-center">
+                    <span class="mr-1">Created By <span class="text-teal-500">Shintia</span></span>
+                    <strong class="flex items-center">
+                        &copy; 2024
+                        <a href="https://wa.me/085806819449?text=Assalamu'alaikum" class="text-teal-500 hover:text-teal-700 mx-2 text-lg"><i class="fa-brands fa-whatsapp"></i></a>
+                        <a href="https://www.instagram.com/shintiadr___/" class="text-teal-500 hover:text-teal-700 mx-2 text-lg"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://www.tiktok.com/@shintiadr___" class="text-teal-500 hover:text-teal-700 mx-2 text-lg"><i class="fa-brands fa-tiktok"></i></a>
+                        <a href="https://www.facebook.com/shintiadewi789/" class="text-teal-500 hover:text-teal-700 mx-2 text-lg"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="https://www.linkedin.com/in/shintia-dewi" class="text-teal-500 hover:text-teal-700 mx-2 text-lg"><i class="fa-brands fa-linkedin"></i></a>
+                    </strong>
+                </div>
             </div>
         </footer>
+
     </div>
     <!-- ./wrapper -->
 
@@ -290,9 +299,9 @@
 
             sidebarLinks.forEach(link => {
                 if (link.getAttribute('href') === currentPath) {
-                    link.classList.add('bg-teal-400', 'text-white', 'hover:bg-teal-600');
+                    link.classList.add('bg-teal-500', 'text-white', 'hover:bg-teal-700');
                 } else {
-                    link.classList.remove('bg-teal-400', 'text-white');
+                    link.classList.remove('bg-teal-500', 'text-white');
                 }
             });
         });

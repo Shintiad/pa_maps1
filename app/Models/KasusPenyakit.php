@@ -24,16 +24,4 @@ class KasusPenyakit extends Model
     public function penyakitKasus() {
         return $this->belongsTo(Penyakit::class, 'penyakit_id', 'id');
     }
-    public function scopeOrderByKecamatan($query)
-    {
-        return $query->join('kecamatans', 'penduduks.kecamatan_id', '=', 'kecamatans.id')
-                     ->select('penduduks.*')
-                     ->orderBy('kecamatans.id');
-    }
-    public function scopeOrderByPenyakit($query)
-    {
-        return $query->join('penyakits', 'kasus_penyakits.penyakit_id', '=', 'penyakits.id')
-                     ->select('kasus_penyakits.*')
-                     ->orderBy('penyakits.id');
-    }
 }

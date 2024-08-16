@@ -30,7 +30,21 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Kecamatan</th>
+                    <th>
+                        <a href="{{ route('kecamatan', ['sort' => 'nama_kecamatan', 'direction' => $direction === 'asc' ? 'desc' : 'asc']) }}"
+                            class="flex items-center justify-center text-gray-700 hover:text-gray-900">
+                            <span>Nama Kecamatan</span>
+                            @if($sort === 'nama_kecamatan')
+                            <span class="ml-2 flex items-center">
+                                <i class="fas fa-sort-{{ $direction === 'asc' ? 'up translate-y-1' : 'down -translate-y-0.5' }} text-sm"></i>
+                            </span>
+                            @else
+                            <span class="ml-2 flex items-center">
+                                <i class="fas fa-sort text-sm text-gray-400"></i>
+                            </span>
+                            @endif
+                        </a>
+                    </th>
                     @if(auth()->check() && auth()->user()->role == 1)
                     <th>Action</th>
                     @endif
@@ -65,8 +79,15 @@
 
     <!-- Pagination Links -->
     <div class="mt-4 pb-4">
-        <div class="col-12 d-flex justify-content-end">
-            {{ $kecamatan->links() }}
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <p class="text-muted ms-2">
+                    Menampilkan {{ $kecamatan->firstItem() }} hingga {{ $kecamatan->lastItem() }} dari {{ $kecamatan->total() }} data
+                </p>
+            </div>
+            <div class="col-md-6 d-flex justify-content-end">
+                {{ $kecamatan->appends(request()->query())->links('vendor.pagination.bootstrap-5') }}
+            </div>
         </div>
     </div>
 </div>

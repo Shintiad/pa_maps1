@@ -68,6 +68,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/kasus/{id}', [KasusPenyakitController::class, 'destroy']);
 
     Route::get('/user', [UserController::class, 'showUser'])->name('user');
+    Route::get('/user/add', [UserController::class, 'create'])->name('add-user');
+    Route::post('/user/add', [UserController::class, 'store']);
+    Route::get('/user/{id}/edit', [UserController::class, 'edit']);
+    Route::put('/user/{id}', [UserController::class, 'update']);
+    Route::delete('/user/{id}', [UserController::class, 'delete']);
+    Route::post('/user/{id}/verify-email', [UserController::class, 'verifyEmail'])->name('verify-email');
+    Route::get('/user/search', [UserController::class, 'search'])->name('user-search');
 
     Route::get('/about', function () {
         return view('pages.about');

@@ -7,9 +7,19 @@ use Illuminate\Http\Request;
 
 class PenyakitController extends Controller
 {
-    public function showPenyakit() {
-        $penyakit = Penyakit::all();
-        return view("pages.penyakit", compact("penyakit"));
+    public function showPenyakit(Request $request) {
+        $sort = $request->query('sort');
+        $direction = $request->query('direction');
+
+        $query = Penyakit::query();
+
+        if ($sort === 'nama_penyakit' && in_array($direction, ['asc', 'desc'])) {
+            $query->orderBy('nama_penyakit', $direction);
+        }
+
+        $penyakit = $query->paginate(10);
+
+        return view("pages.penyakit", compact("penyakit", "sort", "direction"));
     }
     public function create() {
         return view("add.add-penyakit");

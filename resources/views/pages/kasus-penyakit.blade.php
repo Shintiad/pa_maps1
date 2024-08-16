@@ -63,7 +63,7 @@
             </div>
             <!-- Filter Button -->
             <div>
-                <button type="submit" class="btn bg-teal-400 text-white hover:bg-teal-500 h-[38px]">
+                <button type="submit" class="btn bg-teal-500 text-white hover:bg-teal-700 h-[38px]">
                     Filter
                 </button>
             </div>
@@ -72,13 +72,69 @@
 
     <div class="card rounded-2xl ps-3 pe-3">
         <table class="table text-center">
-            <thead>
+            <thead class="items-center">
                 <tr>
                     <th>No</th>
-                    <th>Tahun</th>
-                    <th>Kecamatan</th>
-                    <th>Nama Penyakit</th>
-                    <th>Jumlah Terjangkit</th>
+                    <th>
+                        <a href="{{ route('kasus', array_merge(request()->query(), ['sort' => 'tahun', 'direction' => $sort === 'tahun' && $direction === 'asc' ? 'desc' : 'asc'])) }}"
+                            class="flex items-center justify-center text-gray-700 hover:text-gray-900">
+                            Tahun
+                            @if($sort === 'tahun')
+                            <span class="ml-2 flex items-center">
+                                <i class="fas fa-sort-{{ $direction === 'asc' ? 'up translate-y-1 ' : 'down -translate-y-0.5' }}"></i>
+                            </span>
+                            @else
+                            <span class="ml-2 flex items-center">
+                                <i class="fas fa-sort text-sm text-gray-400"></i>
+                            </span>
+                            @endif
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{{ route('kasus', array_merge(request()->query(), ['sort' => 'nama_kecamatan', 'direction' => $sort === 'nama_kecamatan' && $direction === 'asc' ? 'desc' : 'asc'])) }}"
+                            class="flex items-center justify-center text-gray-700 hover:text-gray-900">
+                            Nama Kecamatan
+                            @if($sort === 'nama_kecamatan')
+                            <span class="ml-2 flex items-center">
+                                <i class="fas fa-sort-{{ $direction === 'asc' ? 'up translate-y-1 ' : 'down -translate-y-0.5' }}"></i>
+                            </span>
+                            @else
+                            <span class="ml-2 flex items-center">
+                                <i class="fas fa-sort text-sm text-gray-400"></i>
+                            </span>
+                            @endif
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{{ route('kasus', array_merge(request()->query(), ['sort' => 'nama_penyakit', 'direction' => $sort === 'nama_penyakit' && $direction === 'asc' ? 'desc' : 'asc'])) }}"
+                            class="flex items-center justify-center text-gray-700 hover:text-gray-900">
+                            Nama Penyakit
+                            @if($sort === 'nama_penyakit')
+                            <span class="ml-2 flex items-center">
+                                <i class="fas fa-sort-{{ $direction === 'asc' ? 'up translate-y-1 ' : 'down -translate-y-0.5' }}"></i>
+                            </span>
+                            @else
+                            <span class="ml-2 flex items-center">
+                                <i class="fas fa-sort text-sm text-gray-400"></i>
+                            </span>
+                            @endif
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{{ route('kasus', array_merge(request()->query(), ['sort' => 'terjangkit', 'direction' => $sort === 'terjangkit' && $direction === 'asc' ? 'desc' : 'asc'])) }}"
+                            class="flex items-center justify-center text-gray-700 hover:text-gray-900">
+                            Jumlah Terjangkit
+                            @if($sort === 'terjangkit')
+                            <span class="ml-2 flex items-center">
+                                <i class="fas fa-sort-{{ $direction === 'asc' ? 'up translate-y-1 ' : 'down -translate-y-0.5' }}"></i>
+                            </span>
+                            @else
+                            <span class="ml-2 flex items-center">
+                                <i class="fas fa-sort text-sm text-gray-400"></i>
+                            </span>
+                            @endif
+                        </a>
+                    </th>
                     @if(auth()->check() && auth()->user()->role == 1)
                     <th>Action</th>
                     @endif
@@ -117,7 +173,7 @@
     <!-- Pagination Links -->
     <div class="mt-4 pb-4">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6 mb-3">
                 <p class="text-muted ms-2">
                     Menampilkan {{ $kasus->firstItem() }} hingga {{ $kasus->lastItem() }} dari {{ $kasus->total() }} data
                 </p>

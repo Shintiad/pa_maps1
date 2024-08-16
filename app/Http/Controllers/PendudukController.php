@@ -11,7 +11,7 @@ class PendudukController extends Controller
 {
     public function showPenduduk(Request $request)
     {
-        $query = Penduduk::orderByKecamatan();
+        $query = Penduduk::query();
 
         // Filter berdasarkan tahun jika parameter 'tahun_id' ada
         if ($request->has('tahun_id') && !empty($request->tahun_id)) {
@@ -23,12 +23,38 @@ class PendudukController extends Controller
             $query->where('kecamatan_id', $request->kecamatan_id);
         }
 
-        $penduduk = $query->paginate(10);
+        // Sorting
+        $sort = $request->query('sort');
+        $direction = $request->query('direction', 'asc');
+
+        if ($sort) {
+            switch ($sort) {
+                case 'tahun':
+                    $query->join('tahuns', 'penduduks.tahun_id', '=', 'tahuns.id')
+                        ->orderBy('tahuns.tahun', $direction);
+                    break;
+                case 'nama_kecamatan':
+                    $query->join('kecamatans', 'penduduks.kecamatan_id', '=', 'kecamatans.id')
+                        ->orderBy('kecamatans.nama_kecamatan', $direction);
+                    break;
+                case 'jumlah_penduduk':
+                    $query->orderBy('jumlah_penduduk', $direction);
+                    break;
+                default:
+                    $query->orderBy($sort, $direction);
+            }
+        } else {
+            // Default sorting
+            $query->join('tahuns', 'penduduks.tahun_id', '=', 'tahuns.id')
+                ->orderBy('tahuns.tahun', 'asc');
+        }
+
+        $penduduk = $query->select('penduduks.*')->paginate(10);
 
         $tahun = Tahun::all();
         $kecamatan = Kecamatan::orderBy('id')->get();
 
-        return view("pages.penduduk", compact("penduduk", "tahun", "kecamatan"));
+        return view("pages.penduduk", compact("penduduk", "tahun", "kecamatan", "sort", "direction"));
     }
     public function create()
     {

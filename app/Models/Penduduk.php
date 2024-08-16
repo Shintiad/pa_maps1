@@ -20,10 +20,4 @@ class Penduduk extends Model
     public function kecamatan() {
         return $this->belongsTo(Kecamatan::class, 'kecamatan_id', 'id');
     }
-    public function scopeOrderByKecamatan($query)
-    {
-        return $query->join('kecamatans', 'penduduks.kecamatan_id', '=', 'kecamatans.id')
-                     ->select('penduduks.*')
-                     ->orderBy('kecamatans.id');
-    }
 }

@@ -23,7 +23,7 @@
 @section('content')
 
 <!-- Main content -->
-<div class="container-fluid">
+<div class="container-fluid pb-4">
     <!-- Small boxes (Stat box) -->
     <div class="row">
         <div class="col-lg-3 col-6">

@@ -7,9 +7,19 @@ use Illuminate\Http\Request;
 
 class KecamatanController extends Controller
 {
-    public function showKecamatan() {
-        $kecamatan = Kecamatan::paginate(10);
-        return view("pages.kecamatan", compact("kecamatan"));
+    public function showKecamatan(Request $request) {
+        $sort = $request->query('sort');
+        $direction = $request->query('direction');
+
+        $query = Kecamatan::query();
+
+        if ($sort === 'nama_kecamatan' && in_array($direction, ['asc', 'desc'])) {
+            $query->orderBy('nama_kecamatan', $direction);
+        }
+
+        $kecamatan = $query->paginate(10);
+
+        return view("pages.kecamatan", compact("kecamatan", "sort", "direction"));
     }
     public function create() {
         return view("add.add-kecamatan");

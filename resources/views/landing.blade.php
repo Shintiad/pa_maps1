@@ -39,7 +39,7 @@
         <div class="container mx-auto px-4 py-2 flex items-center justify-between">
             <!-- Left navbar links -->
             <div class="flex-1">
-                <a href="/" class="brand-link hover:text-teal-400">
+                <a href="/" class="brand-link hover:text-teal-500">
                     <i class="fa-regular fa-map "></i>
                     <span class="brand-text font-extrabold">L - Maps</span>
                 </a>
@@ -48,13 +48,13 @@
             <ul class="flex space-x-4 ml-auto">
                 <!-- Navbar Links -->
                 <li class="nav-item">
-                    <a class="nav-link text-gray-900 font-semibold hover:text-teal-400" href="{{ route('login') }}" role="button">
+                    <a class="nav-link text-gray-900 font-semibold hover:text-teal-500" href="{{ route('login') }}" role="button">
                         Login
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link text-gray-900 font-semibold hover:text-teal-400" href="{{ route('register') }}" role="button">
+                    <a class="nav-link text-gray-900 font-semibold hover:text-teal-500" href="{{ route('register') }}" role="button">
                         Register
                     </a>
                 </li>
