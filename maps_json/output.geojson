@@ -9,6 +9,8 @@
       },
       "properties": {
         "name": "Lamongan",
+        "lat": -7.120441,
+        "lng": 112.415588,
         "admin_level": "5",
         "source": "landsat"
       }
