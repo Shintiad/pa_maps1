@@ -1,19 +1,10 @@
 {
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [112.415588, -7.120441]
-      },
-      "properties": {
-        "name": "Lamongan",
-        "lat": -7.120441,
-        "lng": 112.415588,
-        "admin_level": "5",
-        "source": "landsat"
-      }
-    }
-  ]
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [112.415588, -7.120441]
+  },
+  "properties": {
+    "name": "Lamongan"
+  }
 }
