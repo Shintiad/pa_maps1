@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "type": "Feature",
   "geometry": {
@@ -8,3 +9,37 @@
     "name": "Lamongan"
   }
 }https://raw.githubusercontent.com/Shintiad/pa_maps1/master/maps_json/output.geojson?token=GHSAT0AAAAAACWDKV3YL47AK66Y6DBDQG3YZV7ERBQ
+=======
+{
+    "type": "FeatureCollection",
+    "name": "Lamongan",
+    "crs": {
+      "type": "name",
+      "properties": {
+        "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+      }
+    },
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {
+          "name": "Sukorame"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [112.1102, -7.34495]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "name": "Bluluk"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [112.1311, -7.30878]
+        }
+      },
+    ]
+  }
+>>>>>>> 6e9c14663b437fad66461196c57184d1d7aec54b
