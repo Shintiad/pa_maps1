@@ -24,42 +24,62 @@ class TahunController extends Controller
     }
     public function create()
     {
-        return view("add.add-tahun");
+        if(auth()->check() && auth()->user()->role == 1) {
+            return view("add.add-tahun");
+        } else {
+            return redirect()->route('tahun')->with('error', 'Anda tidak memiliki akses untuk melihat halaman ini.');
+        }
     }
     public function store(Request $request)
     {
         $request->validate([
-            'tahun' => 'required|max:255'
+            'tahun' => 'required|digits:4|integer|min:1900|max:2100'
         ]);
 
-        Tahun::create([
-            'tahun' => $request->tahun
-        ]);
-
-        return redirect()->route('tahun');
+        try {
+            Tahun::create([
+                'tahun' => $request->tahun
+            ]);
+    
+            return redirect()->route('tahun')->with('success', 'Data tahun berhasil ditambahkan!');
+        } catch (\Exception $e) {
+            return redirect()->route('tahun')->with('error', 'Gagal menambahkan data tahun: ' . $e->getMessage());
+        }
     }
     public function edit($id)
     {
-        $tahun = Tahun::find($id);
-        return view("edit.edit-tahun", compact("tahun"));
+        if(auth()->check() && auth()->user()->role == 1) {
+            $tahun = Tahun::find($id);
+            return view("edit.edit-tahun", compact("tahun"));
+        } else {
+            return redirect()->route('tahun')->with('error', 'Anda tidak memiliki akses untuk melihat halaman ini.');
+        }
     }
     public function update(Request $request, $id)
     {
         $tahun = Tahun::find($id);
-        $tahun->update($request->all());
-        return redirect()->route('tahun');
+
+        try {
+            $tahun->update($request->all());
+    
+            return redirect()->route('tahun')->with('success', 'Data tahun berhasil diperbarui!');
+        } catch (\Exception $e) {
+            return redirect()->route('tahun')->with('error', 'Gagal memperbarui data tahun: ' . $e->getMessage());
+        }
     }
     public function destroy($id)
     {
         $tahun = Tahun::findOrFail($id);
 
-        // Hapus data yang terkait
-        $tahun->tahunPenduduk()->delete();
-        $tahun->tahunPenyakit()->delete();
-
-        // Hapus entitas utama
-        $tahun->delete();
-
-        return redirect()->route('tahun');
+        try {
+            $tahun->tahunPenduduk()->delete();
+            $tahun->tahunPenyakit()->delete();
+    
+            $tahun->delete();
+    
+            return redirect()->route('tahun')->with('success', 'Data tahun berhasil dihapus!');
+        } catch (\Exception $e) {
+            return redirect()->route('tahun')->with('error', 'Gagal menghapus data tahun: ' . $e->getMessage());
+        }
     }
 }

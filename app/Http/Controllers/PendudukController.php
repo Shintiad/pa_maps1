@@ -6,6 +6,7 @@ use App\Models\Kecamatan;
 use App\Models\Penduduk;
 use App\Models\Tahun;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class PendudukController extends Controller
 {
@@ -13,17 +14,14 @@ class PendudukController extends Controller
     {
         $query = Penduduk::query();
 
-        // Filter berdasarkan tahun jika parameter 'tahun_id' ada
         if ($request->has('tahun_id') && !empty($request->tahun_id)) {
             $query->where('tahun_id', $request->tahun_id);
         }
 
-        // Filter berdasarkan kecamatan jika parameter 'kecamatan_id' ada
         if ($request->has('kecamatan_id') && !empty($request->kecamatan_id)) {
             $query->where('kecamatan_id', $request->kecamatan_id);
         }
 
-        // Sorting
         $sort = $request->query('sort');
         $direction = $request->query('direction', 'asc');
 
@@ -44,7 +42,6 @@ class PendudukController extends Controller
                     $query->orderBy($sort, $direction);
             }
         } else {
-            // Default sorting
             $query->join('tahuns', 'penduduks.tahun_id', '=', 'tahuns.id')
                 ->orderBy('tahuns.tahun', 'asc');
         }
@@ -58,49 +55,97 @@ class PendudukController extends Controller
     }
     public function create()
     {
-        $tahun = Tahun::all();
-        $kecamatan = Kecamatan::all();
+        if (auth()->check() && auth()->user()->role == 1) {
+            $tahun = Tahun::all();
+            $kecamatan = Kecamatan::all();
 
-        return view("add.add-penduduk", compact("tahun", "kecamatan"));
+            return view("add.add-penduduk", compact("tahun", "kecamatan"));
+        } else {
+            return redirect()->route('penduduk')->with('error', 'Anda tidak memiliki akses untuk melihat halaman ini.');
+        }
     }
     public function store(Request $request)
     {
         $request->validate([
-            'tahun_id' => 'required|exists:tahuns,id',
-            'kecamatan_id' => 'required|exists:kecamatans,id',
+            'tahun_id' => [
+                'required',
+                'exists:tahuns,id',
+            ],
+            'kecamatan_id' => [
+                'required',
+                'exists:kecamatans,id',
+                // Validasi unique untuk kombinasi tahun_id dan kecamatan_id
+                Rule::unique('penduduks')->where(function ($query) use ($request) {
+                    return $query->where('tahun_id', $request->tahun_id)
+                        ->where('kecamatan_id', $request->kecamatan_id);
+                })
+            ],
             'jumlah_penduduk' => 'required|integer|min:0',
+        ], [
+            // Pesan error kustom
+            'kecamatan_id.unique' => 'Data penduduk untuk kombinasi tahun dan kecamatan ini sudah ada!'
         ]);
 
-        Penduduk::create($request->all());
-
-        return redirect()->route('penduduk');
+        try {
+            Penduduk::create($request->all());
+            return redirect()->route('penduduk')->with('success', 'Data penduduk berhasil ditambahkan!');
+        } catch (\Exception $e) {
+            return redirect()->route('penduduk')->with('error', 'Gagal menambahkan data penduduk: ' . $e->getMessage());
+        }
     }
     public function edit($id)
     {
-        $tahun = Tahun::all();
-        $kecamatan = Kecamatan::all();
-        $penduduk = Penduduk::find($id);
+        if (auth()->check() && auth()->user()->role == 1) {
+            $tahun = Tahun::all();
+            $kecamatan = Kecamatan::all();
+            $penduduk = Penduduk::find($id);
 
-        return view("edit.edit-penduduk", compact("tahun", "kecamatan", "penduduk"));
+            return view("edit.edit-penduduk", compact("tahun", "kecamatan", "penduduk"));
+        } else {
+            return redirect()->route('penduduk')->with('error', 'Anda tidak memiliki akses untuk melihat halaman ini.');
+        }
     }
     public function update(Request $request, $id)
     {
-        $penduduk = penduduk::find($id);
-        $request->validate([
-            'tahun_id' => 'required|exists:tahuns,id',
-            'kecamatan_id' => 'required|exists:kecamatans,id',
-            'jumlah_penduduk' => 'required|integer|min:0',
-        ]);
+        $penduduk = Penduduk::find($id);
 
-        $penduduk->update($request->all());
+        try {
+            $request->validate([
+                'tahun_id' => [
+                    'required',
+                    'exists:tahuns,id',
+                ],
+                'kecamatan_id' => [
+                    'required',
+                    'exists:kecamatans,id',
+                    // Validasi unique untuk kombinasi tahun_id dan kecamatan_id, kecuali untuk record yang sedang diupdate
+                    Rule::unique('penduduks')->where(function ($query) use ($request) {
+                        return $query->where('tahun_id', $request->tahun_id)
+                            ->where('kecamatan_id', $request->kecamatan_id);
+                    })->ignore($id)
+                ],
+                'jumlah_penduduk' => 'required|integer|min:0',
+            ], [
+                // Pesan error kustom
+                'kecamatan_id.unique' => 'Data penduduk untuk kombinasi tahun dan kecamatan ini sudah ada!'
+            ]);
 
-        return redirect()->route('penduduk');
+            $penduduk->update($request->all());
+            return redirect()->route('penduduk')->with('success', 'Data penduduk berhasil diperbarui!');
+        } catch (\Exception $e) {
+            return redirect()->route('penduduk')->with('error', 'Gagal memperbarui data penduduk: ' . $e->getMessage());
+        }
     }
     public function destroy($id)
     {
         $penduduk = Penduduk::find($id);
-        $penduduk->delete();
 
-        return redirect()->route('penduduk');
+        try {
+            $penduduk->delete();
+
+            return redirect()->route('penduduk')->with('success', 'Data penduduk berhasil dihapus!');
+        } catch (\Exception $e) {
+            return redirect()->route('penduduk')->with('error', 'Gagal menghapus data penduduk: ' . $e->getMessage());
+        }
     }
 }

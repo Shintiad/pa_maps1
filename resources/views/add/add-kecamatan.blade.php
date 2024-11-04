@@ -9,7 +9,7 @@
         <!-- Kecamatan -->
         <div class="mt-4">
             <x-input-label for="nama_kecamatan" :value="__('Nama kecamatan')" />
-            <x-text-input id="nama_kecamatan" class="block mt-1 w-full" type="text" name="nama_kecamatan" :value="old('nama_kecamatan')" required autocomplete="tel" />
+            <x-text-input id="nama_kecamatan" class="block mt-1 w-full" type="text" name="nama_kecamatan" placeholder="Masukkan nama kecamatan" :value="old('nama_kecamatan')" required autocomplete="tel" />
             <x-input-error :messages="$errors->get('nama_kecamatan')" class="mt-2" />
         </div>
 

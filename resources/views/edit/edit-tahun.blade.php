@@ -6,11 +6,12 @@
     <form method="POST" action="/tahun/{{ $tahun->id }}">
         @method('PUT')
         @csrf
-
+        
         <!-- Tahun -->
         <div class="mt-4">
             <x-input-label for="tahun" :value="__('Tahun')" />
-            <x-text-input id="tahun" class="block mt-1 w-full" type="text" name="tahun" :value="old('tahun', $tahun->tahun)" required autocomplete="tel" />
+            <select id="tahun" name="tahun" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+            </select>
             <x-input-error :messages="$errors->get('tahun')" class="mt-2" />
         </div>
 
@@ -20,6 +21,24 @@
                 {{ __('Simpan') }}
             </x-primary-button>
         </div>
-
     </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const yearSelect = document.getElementById('tahun');
+            const currentYear = new Date().getFullYear();
+            const savedYear = parseInt("{{ $tahun->tahun }}");
+            
+            // Generate years (from current year - 10 to current year + 10)
+            for(let year = currentYear - 10; year <= currentYear + 10; year++) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                if(year === savedYear) {
+                    option.selected = true;
+                }
+                yearSelect.appendChild(option);
+            }
+        });
+    </script>
 </x-guest-layout>

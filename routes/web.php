@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KasusPenyakitController;
 use App\Http\Controllers\KecamatanController;
+use App\Http\Controllers\MapsController;
 use App\Http\Controllers\PendudukController;
 use App\Http\Controllers\PenyakitController;
 use App\Http\Controllers\ProfileController;
@@ -59,6 +60,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/penyakit/{id}/edit', [PenyakitController::class, 'edit']);
     Route::put('/penyakit/{id}', [PenyakitController::class, 'update']);
     Route::delete('/penyakit/{id}', [PenyakitController::class, 'destroy']);
+    Route::get('/regenerate-trend/{penyakitId}', [PenyakitController::class, 'regenerateTrendForDisease']);
 
     Route::get('/kasus', [KasusPenyakitController::class, 'showkasus'])->name('kasus');
     Route::get('/kasus/add', [KasusPenyakitController::class, 'create'])->name('add-kasus');
@@ -76,11 +78,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/user/{id}/verify-email', [UserController::class, 'verifyEmail'])->name('verify-email');
     Route::get('/user/search', [UserController::class, 'search'])->name('user-search');
 
+    Route::get('/maps-penduduk', [MapsController::class, 'showAllPenduduk'])->name('maps-penduduk');
+
+    Route::get('/maps-penyakit', [MapsController::class, 'showAllPenyakit'])->name('maps-penyakit');
+    Route::get('/maps-penyakit/get-link', [MapsController::class, 'getMapLink'])->name('getMapLink');
+
+    Route::get('/regenerate-population/{tahunId}', [MapsController::class, 'regenerateMapForYear']);
+    Route::get('/regenerate-disease/{tahunId}/{penyakitId}', [MapsController::class, 'regenerateMapForDisease']);
+
     Route::get('/about', function () {
         return view('pages.about');
     })->name('about');
-
-    
 });
 
 
@@ -94,4 +102,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

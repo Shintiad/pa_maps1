@@ -90,6 +90,31 @@
             </div>
         </div>
     </div>
+
+    <div class="row mt-4 mb-4">
+        <div class="col-md-6">
+            <h1 class="text-lg ms-2">Trend Penyakit</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach ($trend_penyakit as $index => $penyakits)
+        @if($penyakits->link_metabase)
+        <div class="col-lg-6 col-12">
+            <div class="card">
+                <div class="card-body">
+                    <iframe
+                        src="{{ $penyakits->link_metabase }}"
+                        title="Tren {{ $penyakits->nama_penyakit }}"
+                        frameborder="0"
+                        allowtransparency
+                        style="width: 100%; height: 400px;"></iframe>
+                </div>
+            </div>
+        </div>
+        @endif
+        @endforeach
+    </div>
 </div>
 
 @endsection

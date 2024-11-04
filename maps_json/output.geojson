@@ -1,24 +1,10 @@
 {
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          112.415588,
-          -7.120441
-        ]
-      },
-      "properties": {
-        "admin_level": "5",
-        "name": "Lamongan",
-        "name:ja": "\u30e9\u30e2\u30f3\u30ac\u30f3",
-        "place": "city",
-        "source": "landsat",
-        "id": "2518148509",
-        "timestamp": "2023-10-04T19:13:31Z"
-      }
-    }
-  ]
-}
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [112.415588, -7.120441]
+  },
+  "properties": {
+    "name": "Lamongan"
+  }
+}https://raw.githubusercontent.com/Shintiad/pa_maps1/master/maps_json/output.geojson?token=GHSAT0AAAAAACWDKV3YL47AK66Y6DBDQG3YZV7ERBQ

@@ -7,6 +7,7 @@ use App\Models\Kecamatan;
 use App\Models\Penyakit;
 use App\Models\Tahun;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class KasusPenyakitController extends Controller
 {
@@ -14,22 +15,18 @@ class KasusPenyakitController extends Controller
     {
         $query = KasusPenyakit::query();
 
-        // Filter berdasarkan tahun jika parameter 'tahun_id' ada
         if ($request->has('tahun_id') && !empty($request->tahun_id)) {
             $query->where('tahun_id', $request->tahun_id);
         }
 
-        // Filter berdasarkan kecamatan jika parameter 'kecamatan_id' ada
         if ($request->has('kecamatan_id') && !empty($request->kecamatan_id)) {
             $query->where('kecamatan_id', $request->kecamatan_id);
         }
 
-        // Filter berdasarkan penyakit jika parameter 'penyakit_id' ada
         if ($request->has('penyakit_id') && !empty($request->penyakit_id)) {
             $query->where('penyakit_id', $request->penyakit_id);
         }
 
-        // Sorting
         $sort = $request->query('sort');
         $direction = $request->query('direction', 'asc');
 
@@ -54,7 +51,6 @@ class KasusPenyakitController extends Controller
                     $query->orderBy($sort, $direction);
             }
         } else {
-            // Default sorting
             $query->join('tahuns', 'kasus_penyakits.tahun_id', '=', 'tahuns.id')
                 ->orderBy('tahuns.tahun', 'asc');
         }
@@ -69,53 +65,109 @@ class KasusPenyakitController extends Controller
     }
     public function create()
     {
-        $tahun = Tahun::all();
-        $kecamatan = Kecamatan::all();
-        $penyakit = Penyakit::all();
+        if (auth()->check() && auth()->user()->role == 1) {
+            $tahun = Tahun::all();
+            $kecamatan = Kecamatan::all();
+            $penyakit = Penyakit::all();
 
-        return view("add.add-kasus-penyakit", compact("tahun", "kecamatan", "penyakit"));
+            return view("add.add-kasus-penyakit", compact("tahun", "kecamatan", "penyakit"));
+        } else {
+            return redirect()->route('kasus')->with('error', 'Anda tidak memiliki akses untuk melihat halaman ini.');
+        }
     }
     public function store(Request $request)
     {
         $request->validate([
-            'tahun_id' => 'required|exists:tahuns,id',
-            'kecamatan_id' => 'required|exists:kecamatans,id',
-            'penyakit_id' => 'required|exists:penyakits,id',
+            'tahun_id' => [
+                'required',
+                'exists:tahuns,id',
+            ],
+            'kecamatan_id' => [
+                'required',
+                'exists:kecamatans,id',
+            ],
+            'penyakit_id' => [
+                'required',
+                'exists:penyakits,id',
+                // Validasi unique untuk kombinasi ketiga field
+                Rule::unique('kasus_penyakits')
+                    ->where(function ($query) use ($request) {
+                        return $query->where('tahun_id', $request->tahun_id)
+                            ->where('kecamatan_id', $request->kecamatan_id)
+                            ->where('penyakit_id', $request->penyakit_id);
+                    })
+            ],
             'terjangkit' => 'required|integer|min:0',
+        ], [
+            // Pesan error kustom
+            'penyakit_id.unique' => 'Data kasus untuk kombinasi tahun, kecamatan, dan penyakit ini sudah ada!'
         ]);
 
-        KasusPenyakit::create($request->all());
-
-        return redirect()->route('kasus');
+        try {
+            KasusPenyakit::create($request->all());
+            return redirect()->route('kasus')->with('success', 'Data kasus berhasil ditambahkan!');
+        } catch (\Exception $e) {
+            return redirect()->route('kasus')->with('error', 'Gagal menambahkan data kasus: ' . $e->getMessage());
+        }
     }
     public function edit($id)
     {
-        $tahun = Tahun::all();
-        $kecamatan = Kecamatan::all();
-        $penyakit = Penyakit::all();
-        $kasus = KasusPenyakit::find($id);
+        if (auth()->check() && auth()->user()->role == 1) {
+            $tahun = Tahun::all();
+            $kecamatan = Kecamatan::all();
+            $penyakit = Penyakit::all();
+            $kasus = KasusPenyakit::find($id);
 
-        return view("edit.edit-kasus-penyakit", compact("tahun", "kecamatan", "penyakit", "kasus"));
+            return view("edit.edit-kasus-penyakit", compact("tahun", "kecamatan", "penyakit", "kasus"));
+        } else {
+            return redirect()->route('kasus')->with('error', 'Anda tidak memiliki akses untuk melihat halaman ini.');
+        }
     }
     public function update(Request $request, $id)
     {
         $kasus = KasusPenyakit::find($id);
-        $request->validate([
-            'tahun_id' => 'required|exists:tahuns,id',
-            'kecamatan_id' => 'required|exists:kecamatans,id',
-            'penyakit_id' => 'required|exists:penyakits,id',
-            'terjangkit' => 'required|integer|min:0',
-        ]);
 
-        $kasus->update($request->all());
+        try {
+            $request->validate([
+                'tahun_id' => [
+                    'required',
+                    'exists:tahuns,id',
+                ],
+                'kecamatan_id' => [
+                    'required',
+                    'exists:kecamatans,id',
+                ],
+                'penyakit_id' => [
+                    'required',
+                    'exists:penyakits,id',
+                    Rule::unique('kasus_penyakits')
+                        ->where(function ($query) use ($request) {
+                            return $query->where('tahun_id', $request->tahun_id)
+                                ->where('kecamatan_id', $request->kecamatan_id)
+                                ->where('penyakit_id', $request->penyakit_id);
+                        })->ignore($id)
+                ],
+                'terjangkit' => 'required|integer|min:0',
+            ], [
+                'penyakit_id.unique' => 'Data kasus untuk kombinasi tahun, kecamatan, dan penyakit ini sudah ada!'
+            ]);
 
-        return redirect()->route('kasus');
+            $kasus->update($request->all());
+            return redirect()->route('kasus')->with('success', 'Data kasus berhasil diperbarui!');
+        } catch (\Exception $e) {
+            return redirect()->route('kasus')->with('error', 'Gagal memperbarui data kasus: ' . $e->getMessage());
+        }
     }
     public function destroy($id)
     {
         $kasus = KasusPenyakit::find($id);
-        $kasus->delete();
 
-        return redirect()->route('kasus');
+        try {
+            $kasus->delete();
+
+            return redirect()->route('kasus')->with('success', 'Data kasus berhasil dihapus!');
+        } catch (\Exception $e) {
+            return redirect()->route('kasus')->with('error', 'Gagal menghapus data kasus: ' . $e->getMessage());
+        }
     }
 }

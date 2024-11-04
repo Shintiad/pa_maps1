@@ -1,6 +1,5 @@
 import xmltodict
 import json
-from geojson import Feature, Point, FeatureCollection
 
 # Data OSM Anda
 osm_data = '''<osm version="0.6" generator="CGImap 0.9.3 (286371 spike-07.openstreetmap.org)" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
@@ -21,22 +20,26 @@ node = data_dict['osm']['node']
 lat = float(node['@lat'])
 lon = float(node['@lon'])
 
-# Create properties dictionary
-properties = {tag['@k']: tag['@v'] for tag in node['tag']}
-properties['id'] = node['@id']
-properties['timestamp'] = node['@timestamp']
+# Create properties dictionary with only 'name'
+properties = {
+    'name': next((tag['@v'] for tag in node['tag'] if tag['@k'] == 'name'), '')
+}
 
 # Create GeoJSON feature
-feature = Feature(geometry=Point((lon, lat)), properties=properties)
-
-# Create FeatureCollection
-feature_collection = FeatureCollection([feature])
+feature = {
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [lon, lat]  # Longitude, Latitude
+    },
+    "properties": properties
+}
 
 # Convert to GeoJSON string
-geojson_str = json.dumps(feature_collection, indent=2)
+geojson_str = json.dumps(feature, indent=2)
 
 # Save to file
-with open('output.geojson', 'w') as f:
+with open('coba2.geojson', 'w') as f:
     f.write(geojson_str)
 
-print("GeoJSON file has been created: output.geojson")
+print("GeoJSON file has been created: coba2.geojson")

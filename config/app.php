@@ -59,6 +59,10 @@ return [
 
     'asset_url' => env('ASSET_URL'),
 
+    'metabase_url' => env('METABASE_URL'),
+    'username' => env('METABASE_USERNAME'),
+    'password' => env('METABASE_PASSWORD'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

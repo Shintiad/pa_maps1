@@ -51,7 +51,7 @@
         <!-- Kasus -->
         <div class="mt-4">
             <x-input-label for="terjangkit" :value="__('Jumlah Terjangkit')" />
-            <x-text-input id="terjangkit" class="block mt-1 w-full" type="text" name="terjangkit" :value="old('terjangkit', $kasus->terjangkit)" required autocomplete="tel" />
+            <x-text-input id="terjangkit" class="block mt-1 w-full" type="number" name="terjangkit" :value="old('terjangkit', $kasus->terjangkit)" required autocomplete="tel" />
             <x-input-error :messages="$errors->get('terjangkit')" class="mt-2" />
         </div>
 

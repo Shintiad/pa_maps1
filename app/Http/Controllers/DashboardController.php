@@ -16,6 +16,7 @@ class DashboardController extends Controller
             'kecamatan_count' => Kecamatan::count(),
             'penyakit_count' => Penyakit::count(),
             'user_count' => User::where('role', 0)->count(),
+            'trend_penyakit' => Penyakit::whereNotNull('link_metabase')->get()
         ];
 
         return view('pages.dashboard', $data);

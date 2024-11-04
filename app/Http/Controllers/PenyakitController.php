@@ -1,13 +1,21 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Services\MetabasePenyakitService;
 use App\Models\Penyakit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PenyakitController extends Controller
 {
-    public function showPenyakit(Request $request) {
+    private $metabasePenyakitService;
+
+    public function __construct(MetabasePenyakitService $metabasePenyakitService)
+    {
+        $this->metabasePenyakitService = $metabasePenyakitService;
+    }
+    public function showPenyakit(Request $request)
+    {
         $sort = $request->query('sort');
         $direction = $request->query('direction');
 
@@ -21,37 +29,100 @@ class PenyakitController extends Controller
 
         return view("pages.penyakit", compact("penyakit", "sort", "direction"));
     }
-    public function create() {
-        return view("add.add-penyakit");
+    public function create()
+    {
+        if (auth()->check() && auth()->user()->role == 1) {
+            return view("add.add-penyakit");
+        } else {
+            return redirect()->route('penyakit')->with('error', 'Anda tidak memiliki akses untuk melihat halaman ini.');
+        }
     }
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $request->validate([
             'nama_penyakit' => 'required|max:255'
         ]);
 
-        Penyakit::create([
-            'nama_penyakit' => $request->nama_penyakit
-        ]);
+        try {
+            Penyakit::create([
+                'nama_penyakit' => $request->nama_penyakit
+            ]);
 
-        return redirect()->route('penyakit');
+            return redirect()->route('penyakit')->with('success', 'Data penyakit berhasil ditambahkan!');
+        } catch (\Exception $e) {
+            return redirect()->route('penyakit')->with('error', 'Gagal menambahkan data penyakit: ' . $e->getMessage());
+        }
     }
-    public function edit($id) {
-        $penyakit = Penyakit::find($id);
-        return view("edit.edit-penyakit", compact("penyakit"));
+    public function edit($id)
+    {
+        if (auth()->check() && auth()->user()->role == 1) {
+            $penyakit = Penyakit::find($id);
+            return view("edit.edit-penyakit", compact("penyakit"));
+        } else {
+            return redirect()->route('penyakit')->with('error', 'Anda tidak memiliki akses untuk melihat halaman ini.');
+        }
     }
-    public function update(Request $request, $id) {
-        $penyakit = Penyakit::find($id);
-        $penyakit->update($request->all());
-        return redirect()->route('penyakit');
-    }
-    public function destroy($id) {
+    public function update(Request $request, $id)
+    {
         $penyakit = Penyakit::find($id);
 
-        // Hapus data yang terkait
-        $penyakit->namaPenyakit()->delete();
-        
-        // Hapus entitas utama
-        $penyakit->delete();
-        return redirect()->route('penyakit');
+        try {
+            $penyakit->update($request->all());
+            return redirect()->route('penyakit')->with('success', 'Data penyakit berhasil diperbarui!');
+        } catch (\Exception $e) {
+            return redirect()->route('penyakit')->with('error', 'Gagal memperbarui data penyakit: ' . $e->getMessage());
+        }
+    }
+    public function destroy($id)
+    {
+        $penyakit = Penyakit::find($id);
+
+        try {
+            $penyakit->namaPenyakit()->delete();
+
+            $penyakit->delete();
+            return redirect()->route('penyakit')->with('success', 'Data penyakit berhasil dihapus!');
+        } catch (\Exception $e) {
+            return redirect()->route('penyakit')->with('error', 'Gagal menghapus data penyakit: ' . $e->getMessage());
+        }
+    }
+    public function regenerateTrendForDisease($penyakitId)
+    {
+        try {
+            $penyakit = Penyakit::findOrFail($penyakitId);
+
+            $question = $this->metabasePenyakitService->createTrendQuestion($penyakitId);
+
+            if (isset($question['id'])) {
+                $embedUrl = $this->metabasePenyakitService->getEmbedUrl($question['id']);
+
+                if ($embedUrl) {
+                    $penyakit->update([
+                        'link_metabase' => $embedUrl
+                    ]);
+
+                    // return response()->json([
+                    //     'success' => true,
+                    //     'embed_url' => $embedUrl,
+                    //     'message' => "Trend chart for {$penyakit->nama_penyakit} regenerated successfully"
+                    // ]);
+                    return redirect()->back()->with('success', "Grafik trend untuk penyakit {$penyakit->nama_penyakit} berhasil dibuat");
+                }
+            }
+
+            // return response()->json([
+            //     'success' => false,
+            //     'message' => 'Failed to regenerate trend chart'
+            // ], 500);
+            return redirect()->back()->with('error', 'Gagal membuat grafik trend penyakit');
+        } catch (\Exception $e) {
+            Log::error("Error regenerating trend chart: " . $e->getMessage());
+
+            // return response()->json([
+            //     'success' => false,
+            //     'message' => 'Failed to regenerate trend chart: ' . $e->getMessage()
+            // ], 500);
+            return redirect()->back()->with('error', 'Gagal membuat grafik trend penyakit: ' . $e->getMessage());
+        }
     }
 }

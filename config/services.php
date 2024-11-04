@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'metabase' => [
+        'metabase_url' => env('METABASE_URL', 'http://localhost:3000/'),
+        'username' => env('METABASE_USERNAME', 'shintiadewi789@gmail.com'),
+        'password' => env('METABASE_PASSWORD'),
+    ],
 ];

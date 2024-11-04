@@ -37,7 +37,7 @@
         <!-- Penduduk -->
         <div class="mt-4">
             <x-input-label for="jumlah_penduduk" :value="__('Jumlah Penduduk')" />
-            <x-text-input id="jumlah_penduduk" class="block mt-1 w-full" type="text" name="jumlah_penduduk" :value="old('jumlah_penduduk', $penduduk->jumlah_penduduk)" required autocomplete="tel" />
+            <x-text-input id="jumlah_penduduk" class="block mt-1 w-full" type="number" name="jumlah_penduduk" :value="old('jumlah_penduduk', $penduduk->jumlah_penduduk)" required autocomplete="tel" />
             <x-input-error :messages="$errors->get('jumlah_penduduk')" class="mt-2" />
         </div>
 

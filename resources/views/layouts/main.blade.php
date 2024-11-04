@@ -119,17 +119,17 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-light-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="/dasboard" class="brand-link">
+            <a href="/dashboard" class="brand-link">
                 <img src="{{ asset('lte/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-semibold hover:text-teal-500">L - Maps</span>
+                <span class="brand-text font-semibold hover:text-teal-500">L - EndeMap</span>
             </a>
 
             <!-- Sidebar -->
             <div class="sidebar">
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="image">
-                        <img src="{{ asset('lte/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-3" alt="User Image">
+                    <div class="image flex-shrink-0">
+                        <img src="{{ asset('images/no-profile.jpg') }}" class="img-circle elevation-3" alt="User Image">
                     </div>
                     <div class="info">
                         <a href="{{ route('profile.edit') }}" class="d-block">{{ Auth::user()->name }}</a>
@@ -190,10 +190,18 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/maps" class="nav-link">
+                            <a href="/maps-penduduk" class="nav-link">
                                 <i class="nav-icon fas fa-map-location-dot"></i>
                                 <p>
-                                    Peta Sebaran Penyakit
+                                    Sebaran Penduduk
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/maps-penyakit" class="nav-link">
+                                <i class="nav-icon fas fa-map-location-dot"></i>
+                                <p>
+                                    Sebaran Penyakit
                                 </p>
                             </a>
                         </li>
@@ -287,7 +295,7 @@
     <!-- AdminLTE App -->
     <script src="{{ asset('lte/dist/js/adminlte.js') }}"></script>
     <!-- AdminLTE for demo purposes -->
-    <script src="{{ asset('lte/dist/js/demo.js') }}"></script>
+    <!-- <script src="{{ asset('lte/dist/js/demo.js') }}"></script> -->
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="{{ asset('lte/dist/js/pages/dashboard.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
@@ -298,7 +306,15 @@
             const sidebarLinks = document.querySelectorAll('.nav-sidebar .nav-link');
 
             sidebarLinks.forEach(link => {
-                if (link.getAttribute('href') === currentPath) {
+                const href = link.getAttribute('href');
+                if (
+                    href === currentPath ||
+                    (href === '/user' && (
+                        currentPath === '/user' ||
+                        currentPath.startsWith('/user/') ||
+                        currentPath.includes('/user-search')
+                    ))
+                ) {
                     link.classList.add('bg-teal-500', 'text-white', 'hover:bg-teal-700');
                 } else {
                     link.classList.remove('bg-teal-500', 'text-white');

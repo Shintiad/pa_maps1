@@ -9,7 +9,7 @@
         <!-- penyakit -->
         <div class="mt-4">
             <x-input-label for="nama_penyakit" :value="__('Nama Penyakit')" />
-            <x-text-input id="nama_penyakit" class="block mt-1 w-full" type="text" name="nama_penyakit" :value="old('nama_penyakit')" required autocomplete="tel" />
+            <x-text-input id="nama_penyakit" class="block mt-1 w-full" type="text" name="nama_penyakit" placeholder="Masukkan nama penyakit" :value="old('nama_penyakit')" required autocomplete="tel" />
             <x-input-error :messages="$errors->get('nama_penyakit')" class="mt-2" />
         </div>
 

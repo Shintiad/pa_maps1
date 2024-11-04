@@ -20,6 +20,8 @@ return new class extends Migration
 
             $table->foreign('tahun_id')->references('id')->on('tahuns')->onDelete('cascade');
             $table->foreign('kecamatan_id')->references('id')->on('kecamatans')->onDelete('cascade');
+
+            $table->unique(['tahun_id', 'kecamatan_id']);
         });
     }
 
@@ -33,6 +35,7 @@ return new class extends Migration
             $table->dropColumn('tahun_id');
             $table->dropForeign(['kecamatan_id']);
             $table->dropColumn('kecamatan_id');
+            $table->dropUnique(['tahun_id', 'kecamatan_id']);
         });
         Schema::dropIfExists('penduduks');
     }

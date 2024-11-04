@@ -12,6 +12,7 @@ class Tahun extends Model
     protected $fillable = [
         'id',
         'tahun',
+        'link_metabase',
     ];
     public function tahunPenduduk() {
         return $this->hasMany(Penduduk::class, 'tahun_id', 'id');

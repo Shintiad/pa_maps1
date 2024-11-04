@@ -12,12 +12,20 @@ class UserController extends Controller
 {
     public function showUser()
     {
-        $user = User::where('role', 0)->paginate(5);
-        return view("pages.user", compact("user"));
+        if (auth()->check() && auth()->user()->role == 1) {
+            $user = User::where('role', 0)->paginate(5);
+            return view("pages.user", compact("user"));
+        } else {
+            return redirect()->back()->with('error', 'Anda tidak memiliki akses untuk melihat halaman user.');
+        }
     }
     public function create()
     {
-        return view("add.add-user");
+        if (auth()->check() && auth()->user()->role == 1) {
+            return view("add.add-user");
+        } else {
+            return redirect()->route('user')->with('error', 'Anda tidak memiliki akses untuk melihat halaman user.');
+        }
     }
     public function store(Request $request)
     {
@@ -28,41 +36,57 @@ class UserController extends Controller
             'password' => 'required|confirmed|min:8',
         ]);
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'password' => Hash::make($request->password),
-        ]);
+        try {
+            User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'password' => Hash::make($request->password),
+            ]);
 
-        return redirect()->route('user');
+            return redirect()->route('user')->with('success', 'Data user berhasil ditambahkan!');
+        } catch (\Exception $e) {
+            return redirect()->route('user')->with('error', 'Gagal menambahkan data user: ' . $e->getMessage());
+        }
     }
     public function edit($id)
     {
-        $user = User::find($id);
-        return view("edit.edit-user", compact("user"));
+        if (auth()->check() && auth()->user()->role == 1) {
+            $user = User::find($id);
+            return view("edit.edit-user", compact("user"));
+        } else {
+            return redirect()->route('user')->with('error', 'Anda tidak memiliki akses untuk melihat halaman user.');
+        }
     }
     public function update(Request $request, $id)
     {
         $user = User::find($id);
-        $user->update($request->all());
-        return redirect()->route('user');
+
+        try {
+            $user->update($request->all());
+            return redirect()->route('user')->with('success', 'Data user berhasil diperbarui!');
+        } catch (\Exception $e) {
+            return redirect()->route('user')->with('error', 'Gagal memperbarui data user: ' . $e->getMessage());
+        }
     }
     public function destroy($id)
     {
         $user = User::find($id);
-        $user->delete();
 
-        return redirect()->route('user');
+        try {
+            $user->delete();
+
+            return redirect()->route('user')->with('success', 'Data user berhasil dihapus!');
+        } catch (\Exception $e) {
+            return redirect()->route('user')->with('error', 'Gagal menghapus data user: ' . $e->getMessage());
+        }
     }
     public function verifyEmail($id)
     {
-        // Pastikan hanya admin yang bisa melakukan ini
         // if (auth()->user()->role !== 1) {
         //     return redirect()->route('user')->with('error', 'Anda tidak memiliki izin untuk melakukan tindakan ini.');
         // }
 
-        // Verifikasi email dan set kolom email_verified_at
         $user = User::find($id);
         // $user->email_verified_at = Carbon::now();
         // $user->save();
@@ -74,7 +98,6 @@ class UserController extends Controller
 
         // Check if the email is not verified
         if (!$user->hasVerifiedEmail()) {
-            // Send email verification notification
             $user->sendEmailVerificationNotification();
 
             return redirect()->route('user')->with('status', 'Verification email sent to ' . $user->email);
@@ -86,13 +109,13 @@ class UserController extends Controller
     {
         $keyword = $request->input('keyword');
 
-        $user = User::where('role', 0) 
-        ->where(function($query) use ($keyword) {
-            $query->where('name', 'like', "%$keyword%")
-                ->orWhere('email', 'like', "%$keyword%")
-                ->orWhere('phone', 'like', "%$keyword%");
-        })
-        ->paginate(5);
+        $user = User::where('role', 0)
+            ->where(function ($query) use ($keyword) {
+                $query->where('name', 'like', "%$keyword%")
+                    ->orWhere('email', 'like', "%$keyword%")
+                    ->orWhere('phone', 'like', "%$keyword%");
+            })
+            ->paginate(5);
 
         return view('pages.user', ['user' => $user]);
     }

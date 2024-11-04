@@ -12,6 +12,7 @@ class Penyakit extends Model
     protected $fillable = [
         'id',
         'nama_penyakit',
+        'link_metabase',
     ];
     public function namaPenyakit() {
         return $this->hasMany(KasusPenyakit::class, 'penyakit_id', 'id');

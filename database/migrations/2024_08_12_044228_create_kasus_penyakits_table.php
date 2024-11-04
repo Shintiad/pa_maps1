@@ -22,6 +22,8 @@ return new class extends Migration
             $table->foreign('tahun_id')->references('id')->on('tahuns')->onDelete('cascade');
             $table->foreign('kecamatan_id')->references('id')->on('kecamatans')->onDelete('cascade');
             $table->foreign('penyakit_id')->references('id')->on('penyakits')->onDelete('cascade');
+
+            $table->unique(['tahun_id', 'kecamatan_id', 'penyakit_id']);
         });
     }
 
@@ -37,6 +39,7 @@ return new class extends Migration
             $table->dropColumn('kecamatan_id');
             $table->dropForeign(['penyakit_id']);
             $table->dropColumn('penyakit_id');
+            $table->dropUnique(['tahun_id', 'kecamatan_id', 'penyakit_id']);
         });
         Schema::dropIfExists('kasus_penyakits');
     }

@@ -23,9 +23,9 @@
             <div>
                 <h5 class="card-title text-lg text-teal-400 font-bold ps-1">L - Maps</h5>
                 <p class="card-text text-justify pt-3 ps-4 pe-4">
-                    L-Maps adalah website pemetaan spasial temporal penyakit endemik di Kabupaten Lamongan. Pemetaan ini menggunakan OpenStreetMap (OSM) dengan menggunakan library LeafletJS untuk memetakan penyakit endemik setiap kecamatan.<br><br>
+                    L - EndeMap adalah website pemetaan spasial temporal penyakit endemik di Kabupaten Lamongan. Pemetaan ini menggunakan Metabase untuk memetakan penyakit endemik setiap kecamatan.<br><br>
                     Data yang digunakan diperoleh dari website profile lamongan yang telah dipublish (dapat diakses untuk umum) pada alamat: 
-                    <a href="https://lamongankab.go.id/beranda/dinkes/post/1872">https://lamongankab.go.id/beranda/dinkes/post/1872</a>. <br><br>
+                    <a href="https://lamongankab.go.id/beranda/dinkes/post/1872" target="_blank">https://lamongankab.go.id/beranda/dinkes/post/1872</a>. <br><br>
                     Website ini dikembangkan oleh Shintia Dewi Rahmawati sebagai Tugas Akhir perkuliahan di prodi D3 Teknik Informatika PENS. Kritik dan saran silahkan dikirimkan pada contact di bawah yaa....😉
                 </p>
             </div>
