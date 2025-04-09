@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <h4 class="pb-4 font-bold text-3xl font-mali">Tambah Tahun</h4>
+    <h4 class="pb-2 font-bold text-3xl font-mali">Tambah Tahun</h4>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
     <form method="POST" action="/tahun/add">

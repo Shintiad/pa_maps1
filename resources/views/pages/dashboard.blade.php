@@ -93,13 +93,20 @@
 
     <div class="row mt-4 mb-4">
         <div class="col-md-6">
-            <h1 class="text-lg ms-2">Trend Penyakit</h1>
+            <h1 class="text-lg ms-2">Tren Penyakit Endemik Kab. Lamongan Sejak Tahun 2020</h1>
         </div>
     </div>
 
     <div class="row">
+        @php
+        $hasMetabaseLink = false;
+        @endphp
+
         @foreach ($trend_penyakit as $index => $penyakits)
         @if($penyakits->link_metabase)
+        @php
+        $hasMetabaseLink = true;
+        @endphp
         <div class="col-lg-6 col-12">
             <div class="card">
                 <div class="card-body">
@@ -114,6 +121,16 @@
         </div>
         @endif
         @endforeach
+
+        @if(!$hasMetabaseLink)
+        <div class="col-12">
+            <div class="card bg-red-100">
+                <div class="card-body text-center">
+                    <p>Belum ada tren penyakit yang dibuat</p>
+                </div>
+            </div>
+        </div>
+        @endif
     </div>
 </div>
 

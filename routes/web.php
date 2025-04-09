@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InfoPenyakitController;
 use App\Http\Controllers\KasusPenyakitController;
 use App\Http\Controllers\KecamatanController;
 use App\Http\Controllers\MapsController;
@@ -8,6 +10,7 @@ use App\Http\Controllers\PendudukController;
 use App\Http\Controllers\PenyakitController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TahunController;
+use App\Http\Controllers\UnduhDataController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,12 +29,18 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
-Route::get('/', function () {
-    return view('landing');
-});
+Route::get('/', [HomeController::class, 'showAllPenyakit']);
+Route::get('/get-map-link', [HomeController::class, 'getMapLink'])->name('getMapLinkLanding');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'showAll'])->name('dashboard');
+
+    Route::get('/info-penyakit', [InfoPenyakitController::class, 'showInfo'])->name('info-penyakit');
+    Route::get('/info-penyakit/add/{id?}', [InfoPenyakitController::class, 'createInfo'])->name('add-info');
+    Route::post('/info-penyakit/add', [InfoPenyakitController::class, 'storeInfo']);
+    Route::get('/info-penyakit/{id}/edit', [InfoPenyakitController::class, 'editInfo'])->name('edit-info');
+    Route::put('/info-penyakit/{id}', [InfoPenyakitController::class, 'updateInfo']);
+    Route::delete('/info-penyakit/{id}/reset', [InfoPenyakitController::class, 'destroyInfo']);
 
     Route::get('/tahun', [TahunController::class, 'showTahun'])->name('tahun');
     Route::get('/tahun/add', [TahunController::class, 'create'])->name('add-tahun');
@@ -74,7 +83,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/user/add', [UserController::class, 'store']);
     Route::get('/user/{id}/edit', [UserController::class, 'edit']);
     Route::put('/user/{id}', [UserController::class, 'update']);
-    Route::delete('/user/{id}', [UserController::class, 'delete']);
+    Route::delete('/user/{id}', [UserController::class, 'destroy']);
     Route::post('/user/{id}/verify-email', [UserController::class, 'verifyEmail'])->name('verify-email');
     Route::get('/user/search', [UserController::class, 'search'])->name('user-search');
 
@@ -86,9 +95,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/regenerate-population/{tahunId}', [MapsController::class, 'regenerateMapForYear']);
     Route::get('/regenerate-disease/{tahunId}/{penyakitId}', [MapsController::class, 'regenerateMapForDisease']);
 
+    Route::get('/unduh-data', [UnduhDataController::class, 'showData'])->name('unduh-data');
+    Route::get('/export-excel', [UnduhDataController::class, 'exportExcel'])->name('export-excel');
+    Route::get('/export-pdf', [UnduhDataController::class, 'exportPDF'])->name('export-pdf');
+
     Route::get('/about', function () {
         return view('pages.about');
     })->name('about');
+
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
 });
 
 

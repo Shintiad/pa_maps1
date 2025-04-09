@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\About;
 use App\Services\MetabasePenyakitService;
 use App\Models\Penyakit;
 use Illuminate\Http\Request;
@@ -18,6 +20,7 @@ class PenyakitController extends Controller
     {
         $sort = $request->query('sort');
         $direction = $request->query('direction');
+        $about = About::pluck('value', 'part_name')->toArray();
 
         $query = Penyakit::query();
 
@@ -27,7 +30,7 @@ class PenyakitController extends Controller
 
         $penyakit = $query->paginate(10);
 
-        return view("pages.penyakit", compact("penyakit", "sort", "direction"));
+        return view("pages.penyakit", compact("penyakit", "sort", "direction", "about"));
     }
     public function create()
     {

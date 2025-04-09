@@ -4,7 +4,7 @@
 
 @section('header')
 <div class="container-fluid">
-    <div class="row mb-2">
+    <div class="row">
         <div class="col-sm-6">
             <h1 class="m-0">Maps Pemetaan Sebaran Penyakit Endemik</h1>
         </div>
@@ -74,8 +74,9 @@
 
                 <iframe id="map-iframe" src="" frameborder="0" allowtransparency class="h-screen w-full hidden"></iframe>
                 <div class="flex flex-col items-center justify-center">
-                    <p id="no-map-message" class="text-center text-gray-500 pb-2 hidden">Tidak ada peta yang tersedia untuk kombinasi tahun dan penyakit ini.</p>
-                    <a id="create-map-btn" href="#" class="btn btn-info mt-2 text-white text-center hidden w-auto px-4">Buat Peta Sebaran</a>
+                    <p id="no-map-message" class="text-center text-gray-500 pb-2 hidden">Belum ada peta yang tersedia untuk kombinasi tahun dan penyakit ini.</p>
+                    <a id="create-map-btn" href="#" class="btn btn-info mt-2 text-white text-center hidden w-auto px-4"
+                        data-user-role="{{ auth()->check() ? auth()->user()->role : 0 }}">Buat Peta Sebaran</a>
                 </div>
             </div>
         </div>
@@ -207,17 +208,38 @@
                         case 'no_data':
                             noMapMessage.textContent = 'Belum ada data untuk kombinasi tahun dan penyakit ini.';
                             noMapMessage.classList.remove('hidden');
-                            createMapBtn.classList.remove('hidden');
+                            if (createMapBtn) {
+                                const userRole = createMapBtn.getAttribute('data-user-role');
+                                if (userRole == 1) {
+                                    createMapBtn.classList.remove('hidden');
+                                } else {
+                                    createMapBtn.classList.add('hidden');
+                                }
+                            }
                             break;
                         case 'incomplete_data':
                             noMapMessage.textContent = 'Data belum lengkap untuk semua kecamatan pada kombinasi tahun dan penyakit ini.';
                             noMapMessage.classList.remove('hidden');
-                            createMapBtn.classList.remove('hidden');
+                            if (createMapBtn) {
+                                const userRole = createMapBtn.getAttribute('data-user-role');
+                                if (userRole == 1) {
+                                    createMapBtn.classList.remove('hidden');
+                                } else {
+                                    createMapBtn.classList.add('hidden');
+                                }
+                            }
                             break;
                         case 'no_map':
                             noMapMessage.textContent = 'Tidak ada peta yang tersedia untuk kombinasi tahun dan penyakit ini.';
                             noMapMessage.classList.remove('hidden');
-                            createMapBtn.classList.remove('hidden');
+                            if (createMapBtn) {
+                                const userRole = createMapBtn.getAttribute('data-user-role');
+                                if (userRole == 1) {
+                                    createMapBtn.classList.remove('hidden');
+                                } else {
+                                    createMapBtn.classList.add('hidden');
+                                }
+                            }
                             break;
                     }
                 })
@@ -275,7 +297,7 @@
                 if (targetLink && !targetLink.classList.contains('disabled')) {
                     targetLink.click();
                 }
-            }
+            } 
         });
 
         nextBtn.addEventListener('click', () => {

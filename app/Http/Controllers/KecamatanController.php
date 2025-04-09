@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\About;
 use App\Models\Kecamatan;
 use Illuminate\Http\Request;
 
@@ -11,6 +12,7 @@ class KecamatanController extends Controller
     {
         $sort = $request->query('sort');
         $direction = $request->query('direction');
+        $about = About::pluck('value', 'part_name')->toArray();
 
         $query = Kecamatan::query();
 
@@ -20,7 +22,7 @@ class KecamatanController extends Controller
 
         $kecamatan = $query->paginate(10);
 
-        return view("pages.kecamatan", compact("kecamatan", "sort", "direction"));
+        return view("pages.kecamatan", compact("kecamatan", "sort", "direction", "about"));
     }
     public function create()
     {

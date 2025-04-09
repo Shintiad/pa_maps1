@@ -11,13 +11,20 @@ class MetabasePenyakitService extends MetabaseBaseService
     // Database configuration
     private const DATABASE_ID = 2;
     private const TABLE_ID = 9;
-    private const COLLECTION_ID = 4;
+    // private const COLLECTION_ID = 4; //metabase oss baru 1
+    private const COLLECTION_ID = 6; //metabase oss baru 2
 
-    // Field IDs
-    private const FIELD_CASES = 73;      // Jumlah terjangkit
-    private const FIELD_YEAR = 109;      // Tahun dari relasi
-    private const FIELD_YEAR_SOURCE = 78; // Field sumber tahun
-    private const FIELD_DISEASE = 77;    // ID Penyakit
+    // Field IDs metabase oss baru 1
+    // private const FIELD_CASES = 73;      // Jumlah terjangkit
+    // private const FIELD_YEAR = 109;      // Tahun dari relasi
+    // private const FIELD_YEAR_SOURCE = 78; // Field sumber tahun
+    // private const FIELD_DISEASE = 77;    // ID Penyakit
+
+    // Field IDs metabase oss baru 2
+    private const FIELD_CASES = 80;      // Jumlah terjangkit
+    private const FIELD_YEAR = 123;      // Tahun dari relasi
+    private const FIELD_YEAR_SOURCE = 83; // Field sumber tahun
+    private const FIELD_DISEASE = 82;    // ID Penyakit
 
     private function generateRandomColor()
     {
@@ -55,15 +62,16 @@ class MetabasePenyakitService extends MetabaseBaseService
             $q = $l < 0.5 ? $l * (1 + $s) : $l + $s - $l * $s;
             $p = 2 * $l - $q;
 
-            $r = $this->hueToRGB($p, $q, $h + 1/3);
+            $r = $this->hueToRGB($p, $q, $h + 1 / 3);
             $g = $this->hueToRGB($p, $q, $h);
-            $b = $this->hueToRGB($p, $q, $h - 1/3);
+            $b = $this->hueToRGB($p, $q, $h - 1 / 3);
         }
 
         // Convert to hex
-        return sprintf("#%02x%02x%02x", 
-            round($r * 255), 
-            round($g * 255), 
+        return sprintf(
+            "#%02x%02x%02x",
+            round($r * 255),
+            round($g * 255),
             round($b * 255)
         );
     }
@@ -72,9 +80,9 @@ class MetabasePenyakitService extends MetabaseBaseService
     {
         if ($t < 0) $t += 1;
         if ($t > 1) $t -= 1;
-        if ($t < 1/6) return $p + ($q - $p) * 6 * $t;
-        if ($t < 1/2) return $q;
-        if ($t < 2/3) return $p + ($q - $p) * (2/3 - $t) * 6;
+        if ($t < 1 / 6) return $p + ($q - $p) * 6 * $t;
+        if ($t < 1 / 2) return $q;
+        if ($t < 2 / 3) return $p + ($q - $p) * (2 / 3 - $t) * 6;
         return $p;
     }
 
@@ -82,20 +90,20 @@ class MetabasePenyakitService extends MetabaseBaseService
     {
         // Strip # if present
         $hex = ltrim($color, '#');
-        
+
         // Convert to RGB
         $r = hexdec(substr($hex, 0, 2));
         $g = hexdec(substr($hex, 2, 2));
         $b = hexdec(substr($hex, 4, 2));
-        
+
         // Calculate relative luminance
         $luminance = (0.299 * $r + 0.587 * $g + 0.114 * $b) / 255;
-        
+
         // If color is too light or too dark, regenerate
         if ($luminance < 0.2 || $luminance > 0.8) {
             return false;
         }
-        
+
         return true;
     }
 
@@ -104,12 +112,12 @@ class MetabasePenyakitService extends MetabaseBaseService
         $this->refreshSessionIfNeeded();
 
         $penyakit = Penyakit::findOrFail($penyakitId);
-        
+
         // Generate random colors and ensure they're readable
         do {
             $colors = $this->generateRandomColor();
         } while (!$this->ensureReadableColor($colors['primary']));
-        
+
         $questionData = [
             'name' => "Jumlah Terjangkit Penyakit {$penyakit->nama_penyakit} Kab. Lamongan Sejak Tahun 2020",
             'description' => "Penyakit {$penyakit->nama_penyakit} dipetakan berdasarkan kecamatan sejak tahun 2020",
@@ -154,7 +162,8 @@ class MetabasePenyakitService extends MetabaseBaseService
             'visualization_settings' => [
                 'graph.dimensions' => ['tahun'],
                 'graph.metrics' => ['sum'],
-                'graph.x_axis.scale' => 'linear',
+                // 'graph.x_axis.scale' => 'linear',
+                'graph.x_axis.scale' => 'timesery',
                 'graph.y_axis.title_text' => "Jumlah Terjangkit {$penyakit->nama_penyakit}",
                 'graph.x_axis.title_text' => "Tahun",
                 'series_settings' => [

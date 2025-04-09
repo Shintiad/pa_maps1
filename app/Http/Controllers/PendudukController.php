@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\About;
 use App\Models\Kecamatan;
 use App\Models\Penduduk;
 use App\Models\Tahun;
@@ -50,8 +51,9 @@ class PendudukController extends Controller
 
         $tahun = Tahun::all();
         $kecamatan = Kecamatan::orderBy('id')->get();
+        $about = About::pluck('value', 'part_name')->toArray();
 
-        return view("pages.penduduk", compact("penduduk", "tahun", "kecamatan", "sort", "direction"));
+        return view("pages.penduduk", compact("penduduk", "tahun", "kecamatan", "sort", "direction", "about"));
     }
     public function create()
     {

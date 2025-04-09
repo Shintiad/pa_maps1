@@ -55,6 +55,13 @@
             <x-input-error :messages="$errors->get('terjangkit')" class="mt-2" />
         </div>
 
+        <!-- Meninggal -->
+        <div class="mt-4">
+            <x-input-label for="meninggal" :value="__('Jumlah Meninggal')" />
+            <x-text-input id="meninggal" class="block mt-1 w-full" type="number" name="meninggal" :value="old('meninggal', $kasus->meninggal)" required autocomplete="tel" />
+            <x-input-error :messages="$errors->get('meninggal')" class="mt-2" />
+        </div>
+
         <div class="flex items-center justify-between mt-4 space-x-3">
             <!-- Log in button -->
             <x-primary-button>

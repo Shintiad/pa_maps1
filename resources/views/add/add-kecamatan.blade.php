@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <h4 class="pb-4 font-bold text-3xl font-mali">Tambah Kecamatan</h4>
+    <h4 class="pb-2 font-bold text-3xl font-mali">Tambah Kecamatan</h4>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 

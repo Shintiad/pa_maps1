@@ -42,7 +42,7 @@
 
         <!-- Preloader -->
         <div class="preloader flex-column justify-content-center align-items-center">
-            <img class="animation__shake" src="{{ asset('lte/dist/img/AdminLTELogo.png') }}" alt="AdminLTELogo" height="60" width="60">
+            <img class="animation__shake" src="{{ asset('images/logo_l.png') }}" alt="L - EndeMap Logo" height="60" width="60">
         </div>
 
         <!-- Navbar -->
@@ -120,7 +120,7 @@
         <aside class="main-sidebar sidebar-light-primary elevation-4">
             <!-- Brand Logo -->
             <a href="/dashboard" class="brand-link">
-                <img src="{{ asset('lte/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <img src="{{ asset('images/logo_l.png') }}" alt="L - EndeMap Logo" class="brand-image" style="opacity: .8">
                 <span class="brand-text font-semibold hover:text-teal-500">L - EndeMap</span>
             </a>
 
@@ -146,6 +146,14 @@
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     Dashboard
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/info-penyakit" class="nav-link">
+                                <i class="nav-icon fas fa-square-virus"></i>
+                                <p>
+                                    Informasi Penyakit
                                 </p>
                             </a>
                         </li>
@@ -205,6 +213,14 @@
                                 </p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="/unduh-data" class="nav-link">
+                                <i class="nav-icon fas fa-download"></i>
+                                <p>
+                                    Unduh Data
+                                </p>
+                            </a>
+                        </li>
                         @if(auth()->check() && auth()->user()->role == 1)
                         <li class="nav-item">
                             <a href="/user" class="nav-link">
@@ -250,12 +266,12 @@
                 <div class="flex text-sm text-center items-center">
                     <span class="mr-1">Created By <span class="text-teal-500">Shintia</span></span>
                     <strong class="flex items-center">
-                        &copy; 2024
-                        <a href="https://wa.me/085806819449?text=Assalamu'alaikum" class="text-teal-500 hover:text-teal-700 mx-2 text-lg"><i class="fa-brands fa-whatsapp"></i></a>
-                        <a href="https://www.instagram.com/shintiadr___/" class="text-teal-500 hover:text-teal-700 mx-2 text-lg"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="https://www.tiktok.com/@shintiadr___" class="text-teal-500 hover:text-teal-700 mx-2 text-lg"><i class="fa-brands fa-tiktok"></i></a>
-                        <a href="https://www.facebook.com/shintiadewi789/" class="text-teal-500 hover:text-teal-700 mx-2 text-lg"><i class="fa-brands fa-facebook"></i></a>
-                        <a href="https://www.linkedin.com/in/shintia-dewi" class="text-teal-500 hover:text-teal-700 mx-2 text-lg"><i class="fa-brands fa-linkedin"></i></a>
+                        &copy; 2025
+                        <a href="https://wa.me/{{ $about['phone'] }}?text=Assalamu'alaikum" class="text-teal-500 hover:text-teal-700 mx-2 text-lg"><i class="fa-brands fa-whatsapp"></i></a>
+                        <a href="{{ $about['instagram'] }}" class="text-teal-500 hover:text-teal-700 mx-2 text-lg"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="{{ $about['tiktok'] }}" class="text-teal-500 hover:text-teal-700 mx-2 text-lg"><i class="fa-brands fa-tiktok"></i></a>
+                        <a href="{{ $about['facebook'] }}" class="text-teal-500 hover:text-teal-700 mx-2 text-lg"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="{{ $about['linkedin'] }}" class="text-teal-500 hover:text-teal-700 mx-2 text-lg"><i class="fa-brands fa-linkedin"></i></a>
                     </strong>
                 </div>
             </div>

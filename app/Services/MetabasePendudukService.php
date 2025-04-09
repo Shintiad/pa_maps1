@@ -11,12 +11,18 @@ class MetabasePendudukService extends MetabaseBaseService
     // Database configuration
     private const DATABASE_ID = 2;
     private const TABLE_ID = 19;
-    private const COLLECTION_ID = 4;
+    // private const COLLECTION_ID = 4; //metabase oss baru 1
+    private const COLLECTION_ID = 6; //metabase oss baru 2
 
-    // Field IDs
-    private const FIELD_POPULATION = 132;
-    private const FIELD_DISTRICT = 136;
-    private const FIELD_YEAR = 135;
+    // Field IDs metabase oss baru 1
+    // private const FIELD_POPULATION = 132;
+    // private const FIELD_DISTRICT = 136;
+    // private const FIELD_YEAR = 135;
+
+    // Field IDs metabase oss baru 1
+    private const FIELD_POPULATION = 106;
+    private const FIELD_DISTRICT = 105;
+    private const FIELD_YEAR = 103;
 
     public function createQuestion($tahun)
     {

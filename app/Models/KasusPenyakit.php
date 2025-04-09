@@ -14,6 +14,7 @@ class KasusPenyakit extends Model
         'kecamatan_id',
         'penyakit_id',
         'terjangkit',
+        'meninggal',
     ];
     public function tahunKasus() {
         return $this->belongsTo(Tahun::class, 'tahun_id', 'id');

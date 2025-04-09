@@ -13,6 +13,15 @@ class Penyakit extends Model
         'id',
         'nama_penyakit',
         'link_metabase',
+        'pengertian',
+        'penyebab',
+        'gejala',
+        'diagnosis',
+        'komplikasi',
+        'pengobatan',
+        'pencegahan',
+        'gambar',
+        'sumber_informasi',
     ];
     public function namaPenyakit() {
         return $this->hasMany(KasusPenyakit::class, 'penyakit_id', 'id');

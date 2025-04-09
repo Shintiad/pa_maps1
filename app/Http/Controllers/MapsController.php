@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\About;
 use App\Models\KasusPenyakit;
 use App\Models\Kecamatan;
 use App\Models\MapsPenyakit;
@@ -33,6 +34,7 @@ class MapsController extends Controller
         }])->get();
 
         $totalKecamatan = Kecamatan::count();
+        $about = About::pluck('value', 'part_name')->toArray();
 
         $tahunData = $tahun->map(function ($item) use ($totalKecamatan) {
             $pendudukCount = Penduduk::where('tahun_id', $item->id)->count();
@@ -46,15 +48,16 @@ class MapsController extends Controller
             ];
         });
 
-        return view("pages.maps-penduduk", compact("tahunData", "totalKecamatan"));
+        return view("pages.maps-penduduk", compact("tahunData", "totalKecamatan", "about"));
     }
 
     public function showAllPenyakit()
     {
         $tahun = Tahun::all();
         $penyakit = Penyakit::all();
+        $about = About::pluck('value', 'part_name')->toArray();
 
-        return view("pages.maps-penyakit", compact("tahun", "penyakit"));
+        return view("pages.maps-penyakit", compact("tahun", "penyakit", "about"));
     }
 
     public function getMapLink(Request $request)

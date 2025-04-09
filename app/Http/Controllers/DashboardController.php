@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\About;
 use App\Models\Kecamatan;
 use App\Models\Penyakit;
 use App\Models\Tahun;
@@ -16,7 +17,8 @@ class DashboardController extends Controller
             'kecamatan_count' => Kecamatan::count(),
             'penyakit_count' => Penyakit::count(),
             'user_count' => User::where('role', 0)->count(),
-            'trend_penyakit' => Penyakit::whereNotNull('link_metabase')->get()
+            'trend_penyakit' => Penyakit::whereNotNull('link_metabase')->get(),
+            'about' => About::pluck('value', 'part_name')->toArray()
         ];
 
         return view('pages.dashboard', $data);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\About;
 use App\Models\Tahun;
 use Illuminate\Http\Request;
 
@@ -11,6 +12,7 @@ class TahunController extends Controller
     {
         $sort = $request->query('sort');
         $direction = $request->query('direction');
+        $about = About::pluck('value', 'part_name')->toArray();
 
         $query = Tahun::query();
 
@@ -20,7 +22,7 @@ class TahunController extends Controller
 
         $tahun = $query->paginate(10);
 
-        return view("pages.tahun", compact("tahun", "sort", "direction"));
+        return view("pages.tahun", compact("tahun", "sort", "direction", "about"));
     }
     public function create()
     {

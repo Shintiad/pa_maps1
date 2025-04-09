@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\About;
 use App\Models\KasusPenyakit;
 use App\Models\Kecamatan;
 use App\Models\Penyakit;
@@ -47,6 +48,9 @@ class KasusPenyakitController extends Controller
                 case 'terjangkit':
                     $query->orderBy('terjangkit', $direction);
                     break;
+                case 'meninggal':
+                    $query->orderBy('meninggal', $direction);
+                    break;
                 default:
                     $query->orderBy($sort, $direction);
             }
@@ -60,8 +64,9 @@ class KasusPenyakitController extends Controller
         $tahun = Tahun::all();
         $kecamatan = Kecamatan::orderBy('id')->get();
         $penyakit = Penyakit::orderBy('id')->get();
+        $about = About::pluck('value', 'part_name')->toArray();
 
-        return view("pages.kasus-penyakit", compact("kasus", "tahun", "kecamatan", "penyakit", "sort", "direction"));
+        return view("pages.kasus-penyakit", compact("kasus", "tahun", "kecamatan", "penyakit", "sort", "direction", "about"));
     }
     public function create()
     {
@@ -98,6 +103,7 @@ class KasusPenyakitController extends Controller
                     })
             ],
             'terjangkit' => 'required|integer|min:0',
+            'meninggal' => 'nullable|integer|min:0',
         ], [
             // Pesan error kustom
             'penyakit_id.unique' => 'Data kasus untuk kombinasi tahun, kecamatan, dan penyakit ini sudah ada!'
@@ -148,6 +154,7 @@ class KasusPenyakitController extends Controller
                         })->ignore($id)
                 ],
                 'terjangkit' => 'required|integer|min:0',
+                'meninggal' => 'nullable|integer|min:0',
             ], [
                 'penyakit_id.unique' => 'Data kasus untuk kombinasi tahun, kecamatan, dan penyakit ini sudah ada!'
             ]);

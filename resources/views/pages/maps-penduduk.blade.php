@@ -4,7 +4,7 @@
 
 @section('header')
 <div class="container-fluid">
-    <div class="row mb-2">
+    <div class="row">
         <div class="col-sm-6">
             <h1 class="m-0">Maps Pemetaan Sebaran Penduduk</h1>
         </div>
@@ -86,11 +86,12 @@
                     class="h-screen w-full z-10 {{ !$firstCompleteYear ? 'hidden' : '' }}">
                 </iframe>
                 <p id="no-map-message" class="text-center text-gray-500 pt-2 pb-2 {{ $firstCompleteYear && $firstCompleteYear['link_metabase'] ? 'hidden' : '' }}">
-                    Tidak ada peta yang tersedia untuk tahun ini.
+                    Belum ada peta yang tersedia untuk tahun ini.
                 </p>
                 <a id="create-map-btn"
                     href="/regenerate-population/{{ $firstCompleteYear ? $firstCompleteYear['id'] : '' }}"
-                    class="btn btn-info mt-2 text-white {{ $firstCompleteYear && $firstCompleteYear['link_metabase'] ? 'hidden' : '' }}">
+                    class="btn btn-info mt-2 text-white {{ $firstCompleteYear && $firstCompleteYear['link_metabase'] ? 'hidden' : '' }}"
+                    data-user-role="{{ auth()->check() ? auth()->user()->role : 0 }}">
                     Buat Peta Sebaran
                 </a>
                 <p id="data-status-message" class="text-center text-gray-500 pt-2 pb-2 hidden"></p>
@@ -138,11 +139,27 @@
                     iframe.classList.remove('hidden');
                 } else {
                     noMapMessage.classList.remove('hidden');
-                    createMapBtn.classList.remove('hidden');
+                    if (createMapBtn) {
+                        const userRole = createMapBtn.getAttribute('data-user-role');
+                        if (userRole == 1) {
+                            createMapBtn.classList.remove('hidden');
+                        } else {
+                            createMapBtn.classList.add('hidden');
+                        }
+                    }
                 }
             } else {
                 dataStatusMessage.textContent = message;
                 dataStatusMessage.classList.remove('hidden');
+
+                if (createMapBtn) {
+                    const userRole = createMapBtn.getAttribute('data-user-role');
+                    if (userRole == 1) {
+                        createMapBtn.classList.remove('hidden');
+                    } else {
+                        createMapBtn.classList.add('hidden');
+                    }
+                }
             }
         }
 

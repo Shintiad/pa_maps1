@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <h4 class="pb-4 font-bold text-3xl font-mali">Tambah Kasus</h4>
+    <h4 class="pb-2 font-bold text-3xl font-mali">Tambah Kasus</h4>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
@@ -46,6 +46,13 @@
             <x-input-label for="terjangkit" :value="__('Jumlah Terjangkit')" />
             <x-text-input id="terjangkit" class="block mt-1 w-full" type="number" name="terjangkit" placeholder="Masukkan jumlah terjangkit" :value="old('terjangkit')" required autocomplete="tel" />
             <x-input-error :messages="$errors->get('terjangkit')" class="mt-2" />
+        </div>
+
+        <!-- Meninggal -->
+        <div class="mt-4">
+            <x-input-label for="meninggal" :value="__('Jumlah Meninggal')" />
+            <x-text-input id="meninggal" class="block mt-1 w-full" type="number" name="meninggal" placeholder="Masukkan jumlah meninggal" :value="old('meninggal')" required autocomplete="tel" />
+            <x-input-error :messages="$errors->get('meninggal')" class="mt-2" />
         </div>
 
         <div class="flex items-center justify-between mt-4 space-x-3">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\About;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -14,7 +15,8 @@ class UserController extends Controller
     {
         if (auth()->check() && auth()->user()->role == 1) {
             $user = User::where('role', 0)->paginate(5);
-            return view("pages.user", compact("user"));
+            $about = About::pluck('value', 'part_name')->toArray();
+            return view("pages.user", compact("user", "about"));
         } else {
             return redirect()->back()->with('error', 'Anda tidak memiliki akses untuk melihat halaman user.');
         }
@@ -108,6 +110,7 @@ class UserController extends Controller
     public function search(Request $request)
     {
         $keyword = $request->input('keyword');
+        $about = About::pluck('value', 'part_name')->toArray();
 
         $user = User::where('role', 0)
             ->where(function ($query) use ($keyword) {
@@ -117,6 +120,7 @@ class UserController extends Controller
             })
             ->paginate(5);
 
-        return view('pages.user', ['user' => $user]);
+        return view('pages.user', ['user' => $user], compact('about'))
+            ->with('keyword', $keyword);
     }
 }

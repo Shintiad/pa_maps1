@@ -5,12 +5,12 @@
 @section('header')
 
 <div class="container-fluid">
-    <div class="row mb-2">
+    <div class="row">
         <div class="col-sm-6">
             <h1 class="m-0">Kasus Penyakit Endemik di Kab. Lamongan</h1>
         </div>
         @if(auth()->check() && auth()->user()->role == 1)
-        <div class="col-sm-6 mt-2">
+        <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
                 <a href="{{ route('add-kasus') }}" class="btn btn-success relative group">
                     <i class="fa-solid fa-circle-plus"></i> Kasus Penyakit
@@ -191,6 +191,21 @@
                                 @endif
                             </a>
                         </th>
+                        <th>
+                            <a href="{{ route('kasus', array_merge(request()->query(), ['sort' => 'meninggal', 'direction' => $sort === 'meninggal' && $direction === 'asc' ? 'desc' : 'asc'])) }}"
+                                class="flex items-center justify-center text-gray-700 hover:text-gray-900">
+                                Jumlah Meninggal
+                                @if($sort === 'meninggal')
+                                <span class="ml-2 flex items-center">
+                                    <i class="fas fa-sort-{{ $direction === 'asc' ? 'up translate-y-1 ' : 'down -translate-y-0.5' }}"></i>
+                                </span>
+                                @else
+                                <span class="ml-2 flex items-center">
+                                    <i class="fas fa-sort text-sm text-gray-400"></i>
+                                </span>
+                                @endif
+                            </a>
+                        </th>
                         @if(auth()->check() && auth()->user()->role == 1)
                         <th>Action</th>
                         @endif
@@ -211,6 +226,7 @@
                         <td>{{ $kasusList->kecamatanKasus->nama_kecamatan }}</td>
                         <td>{{ $kasusList->penyakitKasus->nama_penyakit }}</td>
                         <td>{{ $kasusList->terjangkit }}</td>
+                        <td>{{ $kasusList->meninggal }}</td>
                         @if(auth()->check() && auth()->user()->role == 1)
                         <td class="text-center">
                             <div class="flex items-center justify-center space-x-2">

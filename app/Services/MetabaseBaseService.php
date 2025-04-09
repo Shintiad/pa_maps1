@@ -221,7 +221,8 @@ abstract class MetabaseBaseService
             'display' => 'map',
             'visualization_settings' => [
                 'map.type' => 'region',
-                'map.region' => 'e383fad9-6a0f-b57b-2fce-8cd11f8d3660',
+                // 'map.region' => 'e383fad9-6a0f-b57b-2fce-8cd11f8d3660', //metabase oss baru 1
+                'map.region' => '793ecd97-821e-400a-7b9d-34f6b204d38e', //metabase oss baru 2
                 'map.colors' => $colors,
                 'map.color_scheme' => 'Custom',
                 'map.dimension_config' => [
